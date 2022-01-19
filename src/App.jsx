@@ -4,31 +4,41 @@ import { calculateWinner } from './helper';
 import './root.scss';
 
 const App = () => {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [isXnext, setisXnext] = useState(false);
-  const winner = calculateWinner(board);
+  const [history, setHistory] = useState([
+    {
+      board: Array(9).fill(null),
+      isXnext: true,
+    },
+  ]);
+  const [currentMove, setCurrentMove] = useState(0);
+
+  const current = history[currentMove];
+
+  const winner = calculateWinner(current.board);
   const message = winner
     ? `Winner is ${winner}`
-    : `next player ${isXnext ? 'x' : '0'}`;
+    : `next player ${current.isXnext ? 'x' : '0'}`;
   const handleClick = position => {
-    if (board[position] || winner) {
+    if (current.board[position] || winner) {
       return;
     }
-    setBoard(prev => {
-      return prev.map((square, pos) => {
+    setHistory(prev => {
+      const last = prev[prev.length - 1];
+      const newBoard = last.board.map((square, pos) => {
         if (pos === position) {
-          return isXnext ? 'X' : 'O';
+          return last.isXnext ? 'X' : 'O';
         }
         return square;
       });
+      return prev.concat({ board: newBoard, isXnext: !last.isXnext });
     });
-    setisXnext(prev => !prev);
+    setCurrentMove(prev => prev + 1);
   };
   return (
     <div className="app">
       <h1>TIC TAC TOE By Aniket</h1>
       <h2>{message}</h2>
-      <Board board={board} handleClick={handleClick} />
+      <Board board={current.board} handleClick={handleClick} />
     </div>
   );
 };
