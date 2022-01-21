@@ -8,7 +8,7 @@ const Board = ({ board, handleClick }) => {
     );
   };
   return (
-    <div className="board">
+    <div className="board ">
       <div className="board-row">
         {renderSquire(0)}
         {renderSquire(1)}

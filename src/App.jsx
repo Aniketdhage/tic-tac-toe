@@ -5,13 +5,14 @@ import History from './components/History';
 import './root.scss';
 import StatusMessage from './components/statusMessage';
 
+const new_game = [
+  {
+    board: Array(9).fill(null),
+    isXnext: true,
+  },
+];
 const App = () => {
-  const [history, setHistory] = useState([
-    {
-      board: Array(9).fill(null),
-      isXnext: true,
-    },
-  ]);
+  const [history, setHistory] = useState(new_game);
   const [currentMove, setCurrentMove] = useState(0);
 
   const current = history[currentMove];
@@ -37,12 +38,27 @@ const App = () => {
   const moveTo = move => {
     setCurrentMove(move);
   };
+  const onNewGame = () => {
+    setHistory(new_game);
+    setCurrentMove(0);
+  };
   return (
     <div className="app">
-      <h1>TIC TAC TOE By Aniket</h1>
+      <h1>
+        TIC <span className="text-green">TAC</span> TOE By Aniket
+      </h1>
       <StatusMessage current={current} winner={winner} />
       <Board board={current.board} handleClick={handleClick} />
+      <button
+        type="button"
+        className={`btn-reset ${winner ? 'active' : ''}`}
+        onClick={() => onNewGame()}
+      >
+        Start New Game
+      </button>
+      <h2 style={{ fontWeight: 'normal' }}>Current Game History </h2>
       <History history={history} moveTo={moveTo} currentMove={currentMove} />
+      <div className="bg-balls"></div>
     </div>
   );
 };
